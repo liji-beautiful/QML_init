@@ -12,17 +12,19 @@ def transform_to_allowed_gates(circuit, **kwargs):
     (QuantumCircuit) Logically equivalent circuit but with gates in required format (no Ry, Rz gates; only S, Sdg, H, X, Z).
     """
     dag = circuit_to_dag(circuit)
-    with open("output_circuit.txt", "a") as file:
-            for item in circuit:
-                file.write(item.operation.name.upper()+"  ")
-            file.write("\n")
-            for node in dag.op_nodes():
-                file.write(node.name+"  ")
-            file.write("\n")
+    
+    #with open("output_circuit.txt", "a") as file:
+    #        for item in circuit:
+    #            file.write(item.operation.name.upper()+"  ")
+    #        file.write("\n")
+    #        for node in dag.op_nodes():
+    #            file.write(node.name+"  ")
+    #        file.write("\n")
+    
     threshold = 1e-3
     # we will substitute nodes inplace
     for node in dag.op_nodes():
-        
+        #print(node.name)
         qc_loc = QuantumCircuit(1)
         if node.name == "ry":
             angle = float(node.op.params[0])
@@ -70,32 +72,26 @@ def transform_to_allowed_gates(circuit, **kwargs):
                 qc_loc_instr = qc_loc.to_instruction()
                 dag.substitute_node(node, qc_loc_instr, inplace=True)
         elif node.name == "x":
-            #print("@@@@")
             #qc_loc = QuantumCircuit(1)
             qc_loc.x(0)
             qc_loc_instr = qc_loc.to_instruction()
-            #print(qc_loc_instr)
             dag.substitute_node(node, qc_loc_instr, inplace=True)
         
         elif node.name == "y":
-            #print("@@@@")
             #qc_loc = QuantumCircuit(1)
             qc_loc.y(0)
             qc_loc_instr = qc_loc.to_instruction()
-            #print(qc_loc_instr)
             dag.substitute_node(node, qc_loc_instr, inplace=True)
         
         elif node.name == "z":
-            #print("@@@@")
             #qc_loc = QuantumCircuit(1)
             qc_loc.z(0)
             qc_loc_instr = qc_loc.to_instruction()
-            #print(qc_loc_instr)
             dag.substitute_node(node, qc_loc_instr, inplace=True)
-        with open("output_circuit.txt", "a") as file:
-            for item in dag_to_circuit(dag):
-                file.write(item.operation.name.upper()+"  ")
-            file.write("\n")
+        #with open("output_circuit.txt", "a") as file:
+        #    for item in dag_to_circuit(dag):
+        #        file.write(item.operation.name.upper()+"  ")
+        #    file.write("\n")
             #for node in dag.op_nodes():
             #    file.write(node.name+"  ")
             #file.write("\n")
